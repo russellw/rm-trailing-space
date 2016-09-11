@@ -20,30 +20,31 @@ namespace rm_trailing_space
 
         static void Main(string[] args)
         {
-            foreach (var path in args)
-            {
-                if (isBinary(path))
+            foreach (var arg in args)
+                foreach (var path in Glob.Glob.Expand(arg))
                 {
-                    Console.WriteLine("{0}: binary file", path);
-                    continue;
-                }
-                var contents = File.ReadAllLines(path);
-                var changed = false;
-                for (int i = 0; i < contents.Length; i++)
-                {
-                    var s = contents[i].TrimEnd(null);
-                    if (s != contents[i])
+                    if (isBinary(path.ToString()))
                     {
-                        contents[i] = s;
-                        changed = true;
+                        Console.WriteLine("{0}: binary file", path);
+                        continue;
+                    }
+                    var contents = File.ReadAllLines(path.ToString());
+                    var changed = false;
+                    for (int i = 0; i < contents.Length; i++)
+                    {
+                        var s = contents[i].TrimEnd(null);
+                        if (s != contents[i])
+                        {
+                            contents[i] = s;
+                            changed = true;
+                        }
+                    }
+                    if (changed)
+                    {
+                        Console.WriteLine(path);
+                        File.WriteAllLines(path.ToString(), contents);
                     }
                 }
-                if (changed)
-                {
-                    Console.WriteLine(path);
-                    File.WriteAllLines(path, contents);
-                }
-            }
         }
     }
 }
