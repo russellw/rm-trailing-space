@@ -10,6 +10,10 @@ namespace rm_trailing_space
     {
         static void Main(string[] args)
         {
+            foreach(var filename in args)
+            {
+                Console.WriteLine(filename);
+            }
         }
     }
 }
